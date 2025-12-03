@@ -515,3 +515,4 @@ C:\Users\ArinaRa\Desktop\Универ\Универ\ТРПО\Calc\Calc\obj\Debug\
 C:\Users\ArinaRa\Desktop\Универ\Универ\ТРПО\Calc\Calc\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\MultipleQualifiersPerDimensionFound.txt
 C:\Users\ArinaRa\Desktop\Универ\Универ\ТРПО\Calc\Calc\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Calculator.dll
 C:\Users\ArinaRa\Desktop\Универ\Универ\ТРПО\Calc\Calc\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Calculator.pdb
+C:\Users\ArinaRa\Desktop\Универ\Универ\ТРПО\Calc\Calc\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\Calc.sourcelink.json

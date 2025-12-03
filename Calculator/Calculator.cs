@@ -253,6 +253,47 @@ public class Calculator : INotifyPropertyChanged
                 _operation = _operationMap[op];
             }
         }
+        else if(value == "%" || value == "1/x")
+        {
+            if (_firstOperand == null)
+            {
+                if (value == "1/x" && Display == "0")
+                {
+                    HistoryDisplay = "1/(0)";
+                    Display = "Деление на ноль невозможно";
+                }
+                else
+                {
+                    _firstOperand = 0;
+                    HistoryDisplay = "0";
+                    Display = "0";
+                    enable = false;
+                }
+            }
+            else
+            {
+                if (value == "1/x" && Display == "0")
+                {
+                    HistoryDisplay = "1/(0)";
+                    Display = "Деление на ноль невозможно";
+                }
+                else
+                {
+                    if(_firstOperand == 0 && enable == false)
+                    {
+                        Display = "0";
+                        HistoryDisplay = "0";
+                        Journal.Add(new ValueMem("0", 0, "0"));
+                    }
+                    else
+                    {
+                        _secondOperand = _firstOperand * Convert.ToDouble(Display) / 100;
+                        Display = _secondOperand.ToString();
+                        HistoryDisplay = _firstOperand + op + _secondOperand;
+                    }
+                }
+            }
+        }
         else if (_operationMap.ContainsKey(value))
         {
             res = false;
@@ -299,7 +340,7 @@ public class Calculator : INotifyPropertyChanged
         {
             if (Display == "0" && value != "," && value != "+-")
             {
-                
+
                 Display = value;
                 enable = true;
             }
@@ -310,7 +351,7 @@ public class Calculator : INotifyPropertyChanged
             }
             else if (Display == _firstOperand.ToString() || enable == false)
             {
-                if(value == ",")
+                if (value == ",")
                 {
                     Display = "0,";
                 }
@@ -321,9 +362,9 @@ public class Calculator : INotifyPropertyChanged
                     _secondOperand = null;
                 }
             }
-            else if(value == ",")
+            else if (value == ",")
             {
-                if(Display.IndexOf(',') == -1)
+                if (Display.IndexOf(',') == -1)
                 {
                     Display = Display + value;
                     enable = true;
@@ -334,7 +375,7 @@ public class Calculator : INotifyPropertyChanged
                 if (Display.Length < 16)
                 {
                     Display = Display + value;
-                    
+
                     enable = true;
                 }
             }

@@ -9,3 +9,4 @@ C:\Users\ArinaRa\Desktop\Универ\Универ\ТРПО\Calc\Calculator\obj\
 C:\Users\ArinaRa\Desktop\Универ\Универ\ТРПО\Calc\Calculator\obj\Debug\net9.0\refint\Calculator.dll
 C:\Users\ArinaRa\Desktop\Универ\Универ\ТРПО\Calc\Calculator\obj\Debug\net9.0\Calculator.pdb
 C:\Users\ArinaRa\Desktop\Универ\Универ\ТРПО\Calc\Calculator\obj\Debug\net9.0\ref\Calculator.dll
+C:\Users\ArinaRa\Desktop\Универ\Универ\ТРПО\Calc\Calculator\obj\Debug\net9.0\Calculator.sourcelink.json
