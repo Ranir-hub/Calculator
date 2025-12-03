@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Calc.MainPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Button" x:Key="BaseButtonStyle">
+                <Style.Triggers>
+                    <Trigger TargetType="Button" Property="IsPressed" Value="False">
+                        <Setter Property="Opacity" Value="0.9"/>
+                        <Setter Property="Margin" Value="0"/>
+                    </Trigger>
+                </Style.Triggers>
+                <Setter Property="FontSize" Value="30"/>
+                <Setter Property="BorderWidth" Value="0.5"/>
+                <Setter Property="BorderColor" Value="Black"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="Margin" Value="1"/>
+            </Style>
+            <Style TargetType="Button" x:Key="OperationButtonStyle" BasedOn="{StaticResource BaseButtonStyle}">
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <Color>PeachPuff</Color>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Label Text="{Binding HistoryDisplay}" Grid.Column="0" Grid.ColumnSpan="4" HorizontalTextAlignment="End" VerticalTextAlignment="Center" Padding="30" FontSize="20" TextColor="Gray"/>
+        <Label Text="{Binding Display}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="4" HorizontalTextAlignment="End" VerticalTextAlignment="Center"  FontSize="40" />
+
+        <!--<HorizontalStackLayout Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" WidthRequest="650" HeightRequest="50">-->
+        <Button Text="M+" Grid.Row="2" Grid.Column="0" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}" Style="{StaticResource OperationButtonStyle}"/>
+        <Button Text="M-" Grid.Row="2" Grid.Column="1" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}" Style="{StaticResource OperationButtonStyle}"/>
+        <Button Text="MS" Grid.Row="2" Grid.Column="2" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}" Style="{StaticResource OperationButtonStyle}"/>
+        <Button Text="MR" Grid.Row="2" Grid.Column="3" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}" Style="{StaticResource OperationButtonStyle}"/>
+        <Button Text="MC" Grid.Row="1" Grid.Column="0" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}" Style="{StaticResource OperationButtonStyle}"/>
+        <!--</HorizontalStackLayout>-->
+        
+        <Button Text="del" Grid.Column="3" Grid.Row="3" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}" Style="{StaticResource OperationButtonStyle}"/>
+        <Button Text="CE" Grid.Column="1" Grid.Row="3" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}" Style="{StaticResource OperationButtonStyle}"/>
+        <Button Text="C" Grid.Column="2" Grid.Row="3" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}" Style="{StaticResource OperationButtonStyle}"/>
+        <Button Text="%" Grid.Column="0" Grid.Row="3" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}" Style="{StaticResource OperationButtonStyle}"/>
+
+        <Button Text="," Grid.Column="2" Grid.Row="8" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"/>
+        <Button Text="+-" Grid.Column="0" Grid.Row="8" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"/>
+        <Button Text="0" Grid.Column="1" Grid.Row="8" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"/>
+        <Button Text="1" Grid.Column="0" Grid.Row="7" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"/>
+        <Button Text="2" Grid.Column="1" Grid.Row="7" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"/>
+        <Button Text="3" Grid.Column="2" Grid.Row="7" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"/>
+        <Button Text="4" Grid.Column="0" Grid.Row="6" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"/>
+        <Button Text="5" Grid.Column="1" Grid.Row="6" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"/>
+        <Button Text="6" Grid.Column="2" Grid.Row="6" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"/>
+        <Button Text="7" Grid.Column="0" Grid.Row="5" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"/>
+        <Button Text="8" Grid.Column="1" Grid.Row="5" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"/>
+        <Button Text="9" Grid.Column="2" Grid.Row="5" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"/>
+
+
+        <Button Text="/" Grid.Column="3" Grid.Row="4" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}" Style="{StaticResource OperationButtonStyle}"/>
+        <Button Text="x" Grid.Column="3" Grid.Row="5" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}" Style="{StaticResource OperationButtonStyle}"/>
+        <Button Text="+" Grid.Column="3" Grid.Row="6" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}" Style="{StaticResource OperationButtonStyle}"/>
+        <Button Text="-" Grid.Column="3" Grid.Row="7" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}" Style="{StaticResource OperationButtonStyle}"/>
+
+        <Button Text="1/x" Grid.Column="0" Grid.Row="4" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}" Style="{StaticResource OperationButtonStyle}"/>
+        <Button Text="x^2" Grid.Column="1" Grid.Row="4" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}" Style="{StaticResource OperationButtonStyle}"/>
+        <Button Text="√" Grid.Column="2" Grid.Row="4" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}" Style="{StaticResource OperationButtonStyle}"/>
+
+        <Button Text="=" Grid.Column="3" Grid.Row="8" Style="{StaticResource OperationButtonStyle}" Command="{Binding InputCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"/>
+
+        <Label Text="Journal" Grid.Column="4" Grid.Row="0" FontSize="30"/>
+        <ListView x:Name="JournalList" ItemsSource="{Binding Journal}" Grid.Column="4" Grid.RowSpan="12" Grid.Row="1">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <VerticalStackLayout Padding="30,0" Spacing= "15" Margin="15">
+                            <Button Command="{Binding Source={x:Reference Name=JournalList}, Path=BindingContext.FromJournalToDisplayCommand}"
+                                    CommandParameter="{Binding}">
+                                <Button.Text>
+                                    <MultiBinding StringFormat="{}{0}&#x0a;{1}">
+                                        <Binding Path="History"/>
+                                        <Binding Path="Value"/>
+                                    </MultiBinding>
+                                </Button.Text>
+                            </Button>
+                        </VerticalStackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        
+        <Label Text="Memory" Grid.Column="5" Grid.Row="0" FontSize="30"/>
+        <ListView x:Name="MemoryList" ItemsSource="{Binding Memory}" Grid.Column="5" Grid.RowSpan="12" Grid.Row="1">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <VerticalStackLayout Padding="30,0" Spacing= "15" Margin="15">
+                            <Label Text="{Binding Value}"/>
+                            <HorizontalStackLayout>
+                                <Button Text="M+" Grid.Column="0" Grid.Row="1" Command="{Binding Source={x:Reference Name=MemoryList}, Path=BindingContext.PlusToMemory}" CommandParameter="{Binding}" Style="{StaticResource OperationButtonStyle}"/>
+                                <Button Text="M-" Grid.Column="1" Grid.Row="1" Command="{Binding Source={x:Reference Name=MemoryList}, Path=BindingContext.SubFromMemory}" CommandParameter="{Binding}" Style="{StaticResource OperationButtonStyle}"/>
+                                <Button Text="MS" Grid.Column="2" Grid.Row="1" Command="{Binding Source={x:Reference Name=MemoryList}, Path=BindingContext.DeleteFromMemory}" CommandParameter="{Binding}" Style="{StaticResource OperationButtonStyle}"/>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</ContentPage>
