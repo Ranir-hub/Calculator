@@ -270,3 +270,4 @@ C:\Users\ArinaRa\Desktop\Универ\Универ\ТРПО\Calc\CalculatorTests
 C:\Users\ArinaRa\Desktop\Универ\Универ\ТРПО\Calc\CalculatorTests\bin\Debug\net9.0\.msCoverageSourceRootsMapping_CalculatorTests
 C:\Users\ArinaRa\Desktop\Универ\Универ\ТРПО\Calc\CalculatorTests\bin\Debug\net9.0\Calculator.dll
 C:\Users\ArinaRa\Desktop\Универ\Универ\ТРПО\Calc\CalculatorTests\bin\Debug\net9.0\Calculator.pdb
+C:\Users\ArinaRa\Desktop\Универ\Универ\ТРПО\Calc\CalculatorTests\obj\Debug\net9.0\CalculatorTests.sourcelink.json
