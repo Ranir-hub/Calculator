@@ -234,28 +234,28 @@ public class Calculator : INotifyPropertyChanged
             if (_firstOperand == null && _secondOperand == null)
             {
                 _firstOperand = 0;
+                value = value.Replace("x", "(" + Display + ")");
                 _secondOperand = Convert.ToDouble(Display);
                 Calculate();
                 if (Display != "Результат не определен" && Display != "Деление на ноль невозможно") Journal.RemoveAt(0);
 
-                value = value.Replace("x", Display);
-                if (value == "%") HistoryDisplay = "0"; // need change
-                else if (value.Contains("^2") || value.Contains("1/")) HistoryDisplay = value; // need change
-                else HistoryDisplay = value + "(" + Display + ")"; // need change
+                if (value == "%") HistoryDisplay = "0";
+                else if (value.Contains("^2") || value.Contains("1/")) HistoryDisplay = value; 
+                else HistoryDisplay = value + "(" + _secondOperand + ")";
                 _firstOperand = null;
                 _secondOperand = null;
             }
             else if (_secondOperand == null)
             {
                 Double? old = _firstOperand;
-                _secondOperand = Convert.ToDouble(Display); 
+                _secondOperand = Convert.ToDouble(Display);
+                value = value.Replace("x", "(" + Display + ")");
                 Calculate();
                 if (Display != "Результат не определен" && Display != "Деление на ноль невозможно") Journal.RemoveAt(0);
 
-                value = value.Replace("x", Display);
-                if (value == "%") HistoryDisplay = Display; // need change
-                else if (value.Contains("^2") || value.Contains("1/")) HistoryDisplay += value; // need change
-                else HistoryDisplay += value + "(" + Display + ")"; // need change
+                if (value == "%") HistoryDisplay = old + op + Display; 
+                else if (value.Contains("^2") || value.Contains("1/")) HistoryDisplay = old + op + value; 
+                else HistoryDisplay = old + op + value + "(" + value + ")"; 
                 _firstOperand = old;
                 _secondOperand = null;
             }
@@ -300,8 +300,19 @@ public class Calculator : INotifyPropertyChanged
         }
         else if (value == "+-")
         {
-            if ((Display[0]) == '-') Display.Remove(0, 1);
+            if (Display == "0") return;
+
+            if ((Display[0]) == '-') Display = Display.Remove(0, 1);
             else Display = "-" + Display;
+
+            if (enable && _secondOperand == null && _firstOperand.HasValue)
+            {
+                _firstOperand = Convert.ToDouble(Display);
+            }
+            else if (enable && _secondOperand != null)
+            {
+                _secondOperand = Convert.ToDouble(Display);
+            }
         }
         else
         {
