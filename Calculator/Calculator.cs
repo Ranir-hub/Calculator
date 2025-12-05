@@ -72,13 +72,13 @@ public class Calculator : INotifyPropertyChanged
         InputCommand = new Command<string>(Input);
         FromJournalToDisplayCommand = new Command<ValueMem>(x => {
             Display = x.Value;
-            _firstOperand = Convert.ToDecimal(Display);
+            _firstOperand = Convert.ToDouble(Display);
             enable = false;
             HistoryDisplay = x.History;
         });
 
-        SubFromMemory = new Command<ValueMem>(x => Memory[x.index].Value = Convert.ToString(Convert.ToDecimal(x.Value) - Convert.ToDecimal(Display)));
-        PlusToMemory = new Command<ValueMem>(x => Memory[x.index].Value = Convert.ToString(Convert.ToDecimal(x.Value) + Convert.ToDecimal(Display)));
+        SubFromMemory = new Command<ValueMem>(x => Memory[x.index].Value = Convert.ToString(Convert.ToDouble(x.Value) - Convert.ToDouble(Display)));
+        PlusToMemory = new Command<ValueMem>(x => Memory[x.index].Value = Convert.ToString(Convert.ToDouble(x.Value) + Convert.ToDouble(Display)));
         DeleteFromMemory = new Command<ValueMem>(x =>
         {
             int index = x.index;
@@ -96,19 +96,19 @@ public class Calculator : INotifyPropertyChanged
         _operationMap.Add("-", (a, b) => { return a - b; });
         _operationMap.Add("x", (a, b) => { return a * b; });
         _operationMap.Add("/", (a, b) => { return a / b; });
-        _operationMap.Add("x^2", (a, b) => { return (decimal)Math.Pow(Convert.ToDouble(b), 2); }); 
-        _operationMap.Add("√", (a, b) => { return (decimal)Math.Sqrt(Convert.ToDouble(b)); }); 
+        _operationMap.Add("x^2", (a, b) => { return Math.Pow(b, 2); }); 
+        _operationMap.Add("√", (a, b) => { return Math.Sqrt(b); }); 
         _operationMap.Add("1/x", (a, b) => { return 1 / b; }); 
         _operationMap.Add("%", (a, b) => { return a * (b/100); }); 
     }
 
     public ObservableCollection<ValueMem> Journal { get; } = new();
     public ObservableCollection<ValueMem> Memory { get; } = new();
-    private decimal? _firstOperand = null;
-    private decimal? _secondOperand = null;
+    private Double? _firstOperand = null;
+    private Double? _secondOperand = null;
 
-    private Func<decimal, decimal, decimal>? _operation = null;
-    private readonly Dictionary<string, Func<decimal, decimal, decimal>> _operationMap = new();
+    private Func<Double, Double, Double>? _operation = null;
+    private readonly Dictionary<string, Func<Double, Double, Double>> _operationMap = new();
 
     bool enable = true;
     bool res = false;
@@ -160,7 +160,7 @@ public class Calculator : INotifyPropertyChanged
         {
             Display = Convert.ToDouble(_operation(_firstOperand.Value, _secondOperand.Value).ToString()).ToString();
             Journal.Insert(0, new ValueMem(Display, 0, (_firstOperand.ToString() + op + _secondOperand.ToString() + "=")));
-            _firstOperand = (decimal)Convert.ToDouble(Display);
+            _firstOperand = (Double)Convert.ToDouble(Display);
             enable = false;
         }
     }
@@ -203,7 +203,7 @@ public class Calculator : INotifyPropertyChanged
         {
             if (Memory.Count > 0)
             {
-                Memory[0].Value = Convert.ToString(Convert.ToDecimal(Memory[0].Value) + Convert.ToDecimal(Display));
+                Memory[0].Value = Convert.ToString(Convert.ToDouble(Memory[0].Value) + Convert.ToDouble(Display));
                 enable = false;
             }
         }
@@ -211,7 +211,7 @@ public class Calculator : INotifyPropertyChanged
         {
             if (Memory.Count > 0)
             {
-                Memory[0].Value = Convert.ToString(Convert.ToDecimal(Memory[0].Value) - Convert.ToDecimal(Display));
+                Memory[0].Value = Convert.ToString(Convert.ToDouble(Memory[0].Value) - Convert.ToDouble(Display));
                 enable = false;
             }
         }
@@ -231,10 +231,10 @@ public class Calculator : INotifyPropertyChanged
         else if (value == "√" || value == "x^2" || value == "1/x" || value == "%")
         {
             _operation = _operationMap[value];
-            if (_firstOperand == null)
+            if (_firstOperand == null && _secondOperand == null)
             {
                 _firstOperand = 0;
-                _secondOperand = Convert.ToDecimal(Display);
+                _secondOperand = Convert.ToDouble(Display);
                 Calculate();
                 if (Display != "Результат не определен" && Display != "Деление на ноль невозможно") Journal.RemoveAt(0);
 
@@ -242,13 +242,13 @@ public class Calculator : INotifyPropertyChanged
                 if (value == "%") HistoryDisplay = "0"; // need change
                 else if (value.Contains("^2") || value.Contains("1/")) HistoryDisplay = value; // need change
                 else HistoryDisplay = value + "(" + Display + ")"; // need change
-                
+                _firstOperand = null;
                 _secondOperand = null;
             }
             else if (_secondOperand == null)
             {
-                decimal? old = _firstOperand;
-                _secondOperand = Convert.ToDecimal(Display); 
+                Double? old = _firstOperand;
+                _secondOperand = Convert.ToDouble(Display); 
                 Calculate();
                 if (Display != "Результат не определен" && Display != "Деление на ноль невозможно") Journal.RemoveAt(0);
 
@@ -258,7 +258,6 @@ public class Calculator : INotifyPropertyChanged
                 else HistoryDisplay += value + "(" + Display + ")"; // need change
                 _firstOperand = old;
                 _secondOperand = null;
-                enable = false;
             }
             if(op != "") _operation = _operationMap[op];
         }
@@ -267,10 +266,10 @@ public class Calculator : INotifyPropertyChanged
             res = false;
             if (_firstOperand == null)
             {
-                _firstOperand = Convert.ToDecimal(Display);
+                _firstOperand = Convert.ToDouble(Display);
                 enable = false;
             }
-            else if (_secondOperand == null && enable == true) _secondOperand = Convert.ToDecimal(Display);
+            else if (_secondOperand == null && enable == true) _secondOperand = Convert.ToDouble(Display);
 
             if (_operation != null && _firstOperand.HasValue && _secondOperand.HasValue && enable == true)
             {
@@ -283,7 +282,7 @@ public class Calculator : INotifyPropertyChanged
         }
         else if (value == "=")
         {
-            if (_secondOperand == null) _secondOperand = Convert.ToDecimal(Display);
+            if (_secondOperand == null) _secondOperand = Convert.ToDouble(Display);
             if (_operation != null && _firstOperand.HasValue && _secondOperand.HasValue)
             {
                 HistoryDisplay = _firstOperand + op + _secondOperand + value;
@@ -294,7 +293,7 @@ public class Calculator : INotifyPropertyChanged
             else
             {
                 HistoryDisplay = Convert.ToDouble(Display) + value;
-                _firstOperand = Convert.ToDecimal(Display);
+                _firstOperand = Convert.ToDouble(Display);
                 Display = Convert.ToDouble(Display).ToString();
                 Journal.Add(new ValueMem(Display, 0, HistoryDisplay));
             }
@@ -317,7 +316,7 @@ public class Calculator : INotifyPropertyChanged
                 Reset();
                 Display = value;
             }
-            else if (Display == _firstOperand.ToString() || enable == false)
+            else if (enable == false)
             {
                 if (value == ",")
                 {
