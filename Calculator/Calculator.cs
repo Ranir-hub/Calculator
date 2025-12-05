@@ -242,6 +242,7 @@ public class Calculator : INotifyPropertyChanged
                 if (value == "%") HistoryDisplay = "0"; // need change
                 else if (value.Contains("^2") || value.Contains("1/")) HistoryDisplay = value; // need change
                 else HistoryDisplay = value + "(" + Display + ")"; // need change
+                
                 _secondOperand = null;
             }
             else if (_secondOperand == null)
@@ -257,7 +258,7 @@ public class Calculator : INotifyPropertyChanged
                 else HistoryDisplay += value + "(" + Display + ")"; // need change
                 _firstOperand = old;
                 _secondOperand = null;
-                enable = true;
+                enable = false;
             }
             if(op != "") _operation = _operationMap[op];
         }
