@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -104,11 +104,11 @@ public class Calculator : INotifyPropertyChanged
 
     public ObservableCollection<ValueMem> Journal { get; } = new();
     public ObservableCollection<ValueMem> Memory { get; } = new();
-    private Double? _firstOperand = null;
-    private Double? _secondOperand = null;
+    private double? _firstOperand = null;
+    private double? _secondOperand = null;
 
-    private Func<Double, Double, Double>? _operation = null;
-    private readonly Dictionary<string, Func<Double, Double, Double>> _operationMap = new();
+    private Func<double, double, double>? _operation = null;
+    private readonly Dictionary<string, Func<double, double, double>> _operationMap = new();
 
     bool enable = true;
     bool res = false;
@@ -125,7 +125,7 @@ public class Calculator : INotifyPropertyChanged
         }
     }
 
-    private string historydisplay;
+    private string historydisplay = "";
     public string HistoryDisplay
     {
         get => historydisplay;
@@ -141,7 +141,7 @@ public class Calculator : INotifyPropertyChanged
         _firstOperand = null;
         _secondOperand = null;
         _operation = null;
-        HistoryDisplay = null;
+        HistoryDisplay = "";
         enable = true;
         res = false;
         Display = "0";
@@ -152,22 +152,28 @@ public class Calculator : INotifyPropertyChanged
         if (_operation == null) throw new Exception("O_o");
         if ((op == "/" || _operation == _operationMap["1/x"]) && _secondOperand == 0 )
         {
-            if (_firstOperand == 0) Display = "Результат не определен";
+            if (_firstOperand == 0 && _operation != _operationMap["1/x"]) Display = "Результат не определен";
             else Display = "Деление на ноль невозможно";
+            HistoryDisplay = _firstOperand + op;
             _secondOperand = null;
         }
         else
         {
             Display = Convert.ToDouble(_operation(_firstOperand.Value, _secondOperand.Value).ToString()).ToString();
             Journal.Insert(0, new ValueMem(Display, 0, (_firstOperand.ToString() + op + _secondOperand.ToString() + "=")));
-            _firstOperand = (Double)Convert.ToDouble(Display);
+            _firstOperand = (double)Convert.ToDouble(Display);
             enable = false;
         }
     }
 
     private void Input(string value)
     {
-        if (Display == "Результат не определен" || Display == "Деление на ноль невозможно") Reset();
+        if (Display == "Результат не определен" || Display == "Деление на ноль невозможно")
+        {
+            int i;
+            if (int.TryParse(value, out i) || value == "C" || value == "CE") Reset();
+            else return;
+        }
 
         if (value == "C")
         {
@@ -175,6 +181,7 @@ public class Calculator : INotifyPropertyChanged
         }
         else if (value == "CE")
         {
+            if (res) Reset();
             Display = "0";
         }
         else if (value == "MS")
@@ -228,7 +235,40 @@ public class Calculator : INotifyPropertyChanged
                 Display = "0";
             }
         }
-        else if (value == "√" || value == "x^2" || value == "1/x" || value == "%")
+        else if(value == "%")
+        {
+            _operation = _operationMap[value];
+            if (_firstOperand == null && _secondOperand == null)
+            {
+                _firstOperand = 0;
+                _secondOperand = Convert.ToDouble(Display);
+                Calculate();
+
+                HistoryDisplay = "0";
+                _firstOperand = null;
+                _secondOperand = null;
+            }
+            else if (_secondOperand == null)
+            {
+                double? old = _firstOperand;
+                _secondOperand = Convert.ToDouble(Display);
+                if (op == "+" || op == "-")
+                {
+                    Calculate();
+                    Journal.RemoveAt(0);
+                }
+                else
+                {
+                    Display = (Convert.ToDouble(Display) / 100).ToString();
+                }
+                HistoryDisplay = old + op + Display;
+                _firstOperand = old;
+                _secondOperand = Convert.ToDouble(Display);
+                enable = true;
+            }
+            if (op != "") _operation = _operationMap[op];
+        }
+        else if (value == "√" || value == "x^2" || value == "1/x")
         {
             _operation = _operationMap[value];
             if (_firstOperand == null && _secondOperand == null)
@@ -239,27 +279,26 @@ public class Calculator : INotifyPropertyChanged
                 Calculate();
                 if (Display != "Результат не определен" && Display != "Деление на ноль невозможно") Journal.RemoveAt(0);
 
-                if (value == "%") HistoryDisplay = "0";
-                else if (value.Contains("^2") || value.Contains("1/")) HistoryDisplay = value; 
+                if (value.Contains("^2") || value.Contains("1/")) HistoryDisplay = value;
                 else HistoryDisplay = value + "(" + _secondOperand + ")";
                 _firstOperand = null;
                 _secondOperand = null;
             }
             else if (_secondOperand == null)
             {
-                Double? old = _firstOperand;
+                double? old = _firstOperand;
                 _secondOperand = Convert.ToDouble(Display);
                 value = value.Replace("x", "(" + Display + ")");
                 Calculate();
                 if (Display != "Результат не определен" && Display != "Деление на ноль невозможно") Journal.RemoveAt(0);
 
-                if (value == "%") HistoryDisplay = old + op + Display; 
-                else if (value.Contains("^2") || value.Contains("1/")) HistoryDisplay = old + op + value; 
-                else HistoryDisplay = old + op + value + "(" + value + ")"; 
+                if (value.Contains("^2") || value.Contains("1/")) HistoryDisplay = old + op + value;
+                else HistoryDisplay = old + op + value + "(" + _secondOperand + ")";
                 _firstOperand = old;
-                _secondOperand = null;
+                _secondOperand = Convert.ToDouble(Display);
+                enable = true;
             }
-            if(op != "") _operation = _operationMap[op];
+            if (op != "") _operation = _operationMap[op];
         }
         else if (_operationMap.ContainsKey(value))
         {
@@ -287,7 +326,6 @@ public class Calculator : INotifyPropertyChanged
             {
                 HistoryDisplay = _firstOperand + op + _secondOperand + value;
                 Calculate();
-                res = true;
                 enable = false;
             }
             else
@@ -297,6 +335,7 @@ public class Calculator : INotifyPropertyChanged
                 Display = Convert.ToDouble(Display).ToString();
                 Journal.Add(new ValueMem(Display, 0, HistoryDisplay));
             }
+            res = true;
         }
         else if (value == "+-")
         {
@@ -305,9 +344,16 @@ public class Calculator : INotifyPropertyChanged
             if ((Display[0]) == '-') Display = Display.Remove(0, 1);
             else Display = "-" + Display;
 
-            if (enable && _secondOperand == null && _firstOperand.HasValue)
+            if (res)
             {
+                HistoryDisplay = Display;
                 _firstOperand = Convert.ToDouble(Display);
+            }
+
+
+            if (enable == false && _secondOperand == null && _firstOperand.HasValue)
+            {
+                _secondOperand = Convert.ToDouble(Display);
             }
             else if (enable && _secondOperand != null)
             {
